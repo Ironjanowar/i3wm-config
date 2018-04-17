@@ -22,7 +22,7 @@ exec --no-startup-id setxkbmap -option ctrl:swapcaps
 hide_edge_borders both
 
 # lock screen with i3lock
-bindsym $mod+Ctrl+l exec i3lock -i ~/wallpapers/doge-wallpaper.png
+bindsym $mod+Ctrl+l exec i3lock -i ~/.config/i3/wallpapers/doge-wallpaper.png
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
@@ -192,7 +192,7 @@ bindsym XF86AudioPlay exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2
 bindsym XF86AudioNext exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
 
 # Set wallpaper
-exec --no-startup-id feh --bg-fill ~/wallpapers/minimal-earth-wallpaper.jpg
+exec --no-startup-id feh --bg-fill ~/.config/i3/wallpapers/minimal-earth-wallpaper.jpg
 
 # Start nm-applet
 exec --no-startup-id nm-applet
