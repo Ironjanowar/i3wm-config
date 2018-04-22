@@ -38,7 +38,8 @@ bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+Shift+quotedbl kill
 
 # start dmenu (a program launcher)
-bindsym $mod+e exec dmenu_run
+#bindsym $mod+e exec dmenu_run
+bindsym $mod+e exec rofi -show run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -96,16 +97,16 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 1:"tg"
-set $ws2 2:""
-set $ws3 3:"emacs"
-set $ws4 4:"terminal"
-set $ws5 5:"spotify"
-set $ws6 6:"6"
-set $ws7 7:"7"
-set $ws8 8:"8"
-set $ws9 9:"9"
-set $ws10 10:"10"
+set $ws1 1: 
+set $ws2 2: 
+set $ws3 3: 
+set $ws4 4: 
+set $ws5 5: 
+set $ws6 6: 6
+set $ws7 7: 7
+set $ws8 8: 8
+set $ws9 9: 9
+set $ws10 10: 10
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -134,6 +135,12 @@ bindsym $mod+Shift+7 move container to workspace $ws7
 bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
+
+# Fix applications to workspaces
+assign [class="TelegramDesktop"] $ws1
+assign [class="Firefox"] $ws2
+assign [class="Emacs"] $ws3
+assign [class="Spotify"] $ws5
 
 # reload the configuration file
 bindsym $mod+Shift+J reload
@@ -169,10 +176,33 @@ mode "resize" {
 
 bindsym $mod+p mode "resize"
 
+# Colors
+set $bg-color            #2f343f
+set $inactive-bg-color   #2f343f
+set $text-color          #f3f4f5
+set $inactive-text-color #676E7D
+set $urgent-bg-color     #E53935
+set $bar-bg-color        #0C000C
+
+# Window colors
+#                         border              background            text                  indicator
+client.focused            $bg-color           $bg-color             $text-color           #00ff00
+client.unfocused          $inactive-bg-color  $inactive-bg-color    $inactive-text-color  #00ff00
+client.focused_inactive   $inactive-bg-color  $inactive-bg-color    $inactive-text-color  #00ff00
+client.urgent             $urgent-bg-color    $urgent-bg-color      $text-color           #00ff00
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
         status_command i3status
+        colors {
+               background $bar-bg-color
+               separator #757575
+               #                   border               background           text
+               focused_workspace   $bg-color            $bg-color            $text-color
+               inactive_workspace  $bar-bg-color        $bar-bg-color        $inactive-text-color
+               urgent_workspace    $urgent-bg-color     $urgent-bg-color     $text-color
+        }
 }
 
 # volume
@@ -181,6 +211,9 @@ bindsym XF86AudioLowerVolume exec amixer -D pulse sset Master 3%-
 
 # mute
 bindsym XF86AudioMute exec amixer sset Master toggle
+
+# mic mute
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute 1 toggle
 
 # brightness
 bindsym XF86MonBrightnessUp exec xbacklight + 10
@@ -191,8 +224,16 @@ bindsym XF86AudioPrev exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2
 bindsym XF86AudioPlay exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause
 bindsym XF86AudioNext exec dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
 
+# Screenshots
+bindsym --release Print exec scrot '%Y-%m-%d-%s_screenshot_$wx$h.jpg' -e 'mv $f ~/screenshots/'
+bindsym --release Control+Print exec scrot -s '%Y-%m-%d-%s_screenshot_$wx$h.jpg' -e 'mv $f ~/screenshots/'
+bindsym --release Shift+Print exec scrot -s -e 'xclip -selection clipboard -t "image/png" < $f'
+
 # Set wallpaper
 exec --no-startup-id feh --bg-fill ~/.config/i3/wallpapers/minimal-earth-wallpaper.jpg
 
-# Start nm-applet
+# Start nm-applet (internet controller)
 exec --no-startup-id nm-applet
+
+# Start compton for opacity stuff
+exec compton
